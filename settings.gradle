@@ -1,0 +1,5 @@
+rootProject.name = 'BreedsProject'
+include 'api'
+include 'worker'
+include 'model'
+
