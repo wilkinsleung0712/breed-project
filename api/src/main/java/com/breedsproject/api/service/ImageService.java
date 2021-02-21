@@ -1,7 +1,11 @@
 package com.breedsproject.api.service;
 
-import com.breedsproject.api.model.DogBreeds;
+import java.util.Date;
 
 public interface ImageService {
-  DogBreeds getDogBreedRecordFromEndpoint();
+  String saveBreedsImageToStorage(final String url);
+
+  Date getBreedsImageLastUpdateTime(final String url);
+
+  void deleteImageFromStorage(final String url);
 }

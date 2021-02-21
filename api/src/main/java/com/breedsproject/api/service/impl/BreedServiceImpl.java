@@ -1,12 +1,10 @@
 package com.breedsproject.api.service.impl;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.breedsproject.api.model.DogBreeds;
 import com.breedsproject.api.repository.DogBreedsMapper;
 import com.breedsproject.api.repository.DogBreedsRepository;
 import com.breedsproject.api.service.BreedService;
-import com.breedsproject.api.service.ImageService;
-import com.breedsproject.api.web.response.BreedResponse;
+import com.breedsproject.api.web.response.BreedRecord;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,38 +15,44 @@ import org.springframework.stereotype.Service;
 @Service
 public class BreedServiceImpl implements BreedService {
 
-  @Autowired private AmazonS3 amazonS3;
-
-  @Autowired private ImageService imageService;
+  @Autowired private DogBreedsProcessor dogBreedsProcessor;
 
   @Autowired private DogBreedsRepository dogBreedsRepository;
 
   @Override
-  public Optional<BreedResponse> getDogBreedById(UUID id) {
+  public Optional<BreedRecord> getDogBreedById(UUID id) {
     return Optional.of(
-        DogBreedsMapper.INSTANCE.dogBreedDtoToBreedResponse(
-            dogBreedsRepository.findById(id).get()));
+        DogBreedsMapper.INSTANCE.dogBreedDtoToBreedRecord(dogBreedsRepository.findById(id).get()));
   }
 
   @Override
-  public Optional<List<BreedResponse>> getDogBreedByNames(List<String> dogNames) {
+  public Optional<List<BreedRecord>> getDogBreedByName(String dogName) {
     return Optional.of(
-        dogBreedsRepository.findAllByBreedName(dogNames).stream()
-            .map(DogBreedsMapper.INSTANCE::dogBreedDtoToBreedResponse)
+        dogBreedsRepository.findByBreedName(dogName).stream()
+            .map(DogBreedsMapper.INSTANCE::dogBreedDtoToBreedRecord)
             .collect(Collectors.toUnmodifiableList()));
   }
 
   @Override
-  public Optional<BreedResponse> createDogBreedRecord() {
-    var id = UUID.randomUUID();
-    var dogBreeds = imageService.getDogBreedRecordFromEndpoint();
-
+  public Optional<BreedRecord> createDogBreedRecord() {
+    DogBreeds dogBreeds = dogBreedsProcessor.generateBreeds();
     DogBreeds save = dogBreedsRepository.save(dogBreeds);
-    return Optional.of(DogBreedsMapper.INSTANCE.dogBreedDtoToBreedResponse(save));
+    return Optional.of(DogBreedsMapper.INSTANCE.dogBreedDtoToBreedRecord(save));
   }
 
   @Override
-  public Optional<BreedResponse> deleteDogBreedById(UUID id) {
+  public Optional<BreedRecord> deleteDogBreedById(UUID id) {
+    Optional<DogBreeds> record = dogBreedsRepository.findById(id);
+    record.ifPresent(
+        r -> {
+          dogBreedsRepository.deleteById(id);
+          dogBreedsProcessor.removeBreed(r.getResourceUrl());
+        });
     return Optional.empty();
+  }
+
+  @Override
+  public List<String> getAllDogBreeds() {
+    return dogBreedsRepository.findAllDistinctBreedNames();
   }
 }

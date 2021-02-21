@@ -1,7 +1,7 @@
 package com.breedsproject.api.web;
 
 import com.breedsproject.api.service.BreedService;
-import com.breedsproject.api.web.response.BreedResponse;
+import com.breedsproject.api.web.response.BreedRecord;
 import com.breedsproject.api.web.response.DataResponse;
 import java.util.List;
 import java.util.UUID;
@@ -15,24 +15,28 @@ public class BreedController {
 
   @Autowired private BreedService breedService;
 
+  @PostMapping("/create")
+  public DataResponse<BreedRecord> createDogBreedRecord() {
+    return new DataResponse(breedService.createDogBreedRecord());
+  }
+
   @GetMapping("/{id}")
-  public DataResponse<BreedResponse> getDogBreedRecord(@PathVariable UUID id) {
+  public DataResponse<BreedRecord> getDogBreedRecord(@PathVariable UUID id) {
     return new DataResponse(breedService.getDogBreedById(id));
   }
 
-  @GetMapping("/search")
-  public DataResponse<List<BreedResponse>> searchDogBreedRecord(
-      @RequestParam List<String> dogNames) {
-    return new DataResponse(breedService.getDogBreedByNames(dogNames));
-  }
-
   @DeleteMapping("/{id}")
-  public DataResponse<BreedResponse> deleteDogBreedRecord(@PathVariable UUID id) {
-    return null;
+  public void deleteDogBreedRecord(@PathVariable UUID id) {
+    breedService.deleteDogBreedById(id);
   }
 
-  @PostMapping("/create")
-  public DataResponse<BreedResponse> createDogBreedRecord() {
-    return new DataResponse(breedService.createDogBreedRecord());
+  @GetMapping("/search")
+  public DataResponse<List<BreedRecord>> searchByBreedName(@RequestParam String breedName) {
+    return new DataResponse(breedService.getDogBreedByName(breedName));
+  }
+
+  @GetMapping("/names")
+  public DataResponse<List<String>> findBreedNames() {
+    return new DataResponse<>(breedService.getAllDogBreeds());
   }
 }
