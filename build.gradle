@@ -35,6 +35,22 @@ allprojects {
         jcenter()
     }
 
+
+    buildscript {
+        spotless {
+            java {
+                target project.fileTree(project.rootDir) {
+                    include '**/*.java'
+                    exclude '**/generated/**/*.*'
+                    exclude 'gradle-cache/**/*'
+                    exclude '**/node_modules/**/*'
+                }
+                googleJavaFormat('1.8')
+            }
+        }
+    }
+
+
     dependencies {
         // https://projectlombok.org/setup/gradle
         compileOnly "org.projectlombok:lombok:$lombokVersion"
