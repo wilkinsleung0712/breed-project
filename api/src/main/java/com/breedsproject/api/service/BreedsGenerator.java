@@ -2,7 +2,7 @@ package com.breedsproject.api.service;
 
 public interface BreedsGenerator<T> {
 
-  T generateBreeds();
+  T generateDogBreed();
 
   void removeBreed(String resourceUrl);
 }

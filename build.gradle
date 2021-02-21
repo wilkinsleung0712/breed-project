@@ -19,6 +19,7 @@ ext {
     guavaVersion = '30.1-jre'
     apacheVersion = '3.0'
     mapStructVersion = '1.4.1.Final'
+    openapiVersion = '1.5.4'
     logbackVersion = '1.2.3'
     mockitoExtensionVersion  = '3.5.0'
 }

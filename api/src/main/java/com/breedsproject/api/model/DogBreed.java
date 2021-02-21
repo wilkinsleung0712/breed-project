@@ -11,7 +11,7 @@ import lombok.*;
 @Builder
 @Data
 @Entity
-public class DogBreeds {
+public class DogBreed {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "id")

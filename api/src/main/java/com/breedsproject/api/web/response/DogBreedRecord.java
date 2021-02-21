@@ -11,7 +11,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Data
 @Builder
-public class BreedRecord {
+public class DogBreedRecord {
   public final UUID id;
   public final String breedName;
   public final String resourceUrl;

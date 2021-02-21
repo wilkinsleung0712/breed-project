@@ -1,10 +1,10 @@
 package com.breedsproject.api.service.impl;
 
-import com.breedsproject.api.model.DogBreeds;
+import com.breedsproject.api.model.DogBreed;
 import com.breedsproject.api.repository.DogBreedsMapper;
 import com.breedsproject.api.repository.DogBreedsRepository;
-import com.breedsproject.api.service.BreedService;
-import com.breedsproject.api.web.response.BreedRecord;
+import com.breedsproject.api.service.DogBreedsService;
+import com.breedsproject.api.web.response.DogBreedRecord;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -13,20 +13,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BreedServiceImpl implements BreedService {
+public class DogBreedsServiceImpl implements DogBreedsService {
 
   @Autowired private DogBreedsProcessor dogBreedsProcessor;
 
   @Autowired private DogBreedsRepository dogBreedsRepository;
 
   @Override
-  public Optional<BreedRecord> getDogBreedById(UUID id) {
+  public Optional<DogBreedRecord> getDogBreedById(UUID id) {
     return Optional.of(
         DogBreedsMapper.INSTANCE.dogBreedDtoToBreedRecord(dogBreedsRepository.findById(id).get()));
   }
 
   @Override
-  public Optional<List<BreedRecord>> getDogBreedByName(String dogName) {
+  public Optional<List<DogBreedRecord>> getDogBreedByName(String dogName) {
     return Optional.of(
         dogBreedsRepository.findByBreedName(dogName).stream()
             .map(DogBreedsMapper.INSTANCE::dogBreedDtoToBreedRecord)
@@ -34,15 +34,15 @@ public class BreedServiceImpl implements BreedService {
   }
 
   @Override
-  public Optional<BreedRecord> createDogBreedRecord() {
-    DogBreeds dogBreeds = dogBreedsProcessor.generateBreeds();
-    DogBreeds save = dogBreedsRepository.save(dogBreeds);
-    return Optional.of(DogBreedsMapper.INSTANCE.dogBreedDtoToBreedRecord(save));
+  public Optional<DogBreedRecord> createDogBreedRecord() {
+    var breed = dogBreedsProcessor.generateDogBreed();
+    var saved = dogBreedsRepository.save(breed);
+    return Optional.of(DogBreedsMapper.INSTANCE.dogBreedDtoToBreedRecord(saved));
   }
 
   @Override
-  public Optional<BreedRecord> deleteDogBreedById(UUID id) {
-    Optional<DogBreeds> record = dogBreedsRepository.findById(id);
+  public Optional<DogBreedRecord> deleteDogBreedById(UUID id) {
+    Optional<DogBreed> record = dogBreedsRepository.findById(id);
     record.ifPresent(
         r -> {
           dogBreedsRepository.deleteById(id);
