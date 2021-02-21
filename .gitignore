@@ -11,6 +11,7 @@ build/
 .DS_Store
 out/
 *.class
+*.db
 *.log
 .terraform/
 venv/

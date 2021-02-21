@@ -21,8 +21,7 @@ public class DogBreedsServiceImpl implements DogBreedsService {
 
   @Override
   public Optional<DogBreedRecord> getDogBreedById(UUID id) {
-    return Optional.of(
-        DogBreedsMapper.INSTANCE.dogBreedDtoToBreedRecord(dogBreedsRepository.findById(id).get()));
+    return dogBreedsRepository.findById(id).map(DogBreedsMapper.INSTANCE::dogBreedDtoToBreedRecord);
   }
 
   @Override
@@ -35,7 +34,7 @@ public class DogBreedsServiceImpl implements DogBreedsService {
 
   @Override
   public Optional<DogBreedRecord> createDogBreedRecord() {
-    var breed = dogBreedsProcessor.generateDogBreed();
+    var breed = dogBreedsProcessor.generateBreed();
     var saved = dogBreedsRepository.save(breed);
     return Optional.of(DogBreedsMapper.INSTANCE.dogBreedDtoToBreedRecord(saved));
   }

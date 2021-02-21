@@ -20,7 +20,7 @@ public class DogBreedsProcessor implements BreedsGenerator<DogBreed> {
   private String imageUrl;
 
   @Override
-  public DogBreed generateDogBreed() {
+  public DogBreed generateBreed() {
     var randomImageResponse = restTemplate.getForObject(imageUrl, BreedImageResponse.class);
     assert randomImageResponse != null;
     var url = randomImageResponse.message;

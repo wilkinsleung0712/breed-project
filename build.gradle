@@ -1,6 +1,9 @@
 plugins {
-    id 'com.diffplug.gradle.spotless' version '4.0.0' apply false
+    id 'com.diffplug.gradle.spotless' version '4.0.0'
+    id 'org.springframework.boot' version "2.2.8.RELEASE"
 }
+
+apply plugin: 'io.spring.dependency-management'
 
 group 'org.example'
 version '1.0-SNAPSHOT'
@@ -53,6 +56,7 @@ allprojects {
 
 
     dependencies {
+
         // https://projectlombok.org/setup/gradle
         compileOnly "org.projectlombok:lombok:$lombokVersion"
         annotationProcessor "org.projectlombok:lombok:$lombokVersion"
@@ -79,6 +83,23 @@ allprojects {
         testCompile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.30'
 
 
+        implementation("org.mapstruct:mapstruct:$mapStructVersion")
+        annotationProcessor("org.mapstruct:mapstruct-processor:$mapStructVersion")
+
+        compile 'com.h2database:h2'
+
+        // Amazon sdk
+        implementation "com.amazonaws:aws-java-sdk-s3:$awsSdkVersion"
+        // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui
+        implementation "org.springdoc:springdoc-openapi-ui:$openapiVersion"
+
+
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
     }
 
     test {
@@ -96,7 +117,16 @@ allprojects {
         }
     }
 }
-
+tasks.register("bootRunDev") {
+    group = "application"
+    description = "Runs the Spring Boot application with the dev profile"
+    doFirst {
+        tasks.bootRun.configure {
+            systemProperty("spring.profiles.active", "dev")
+        }
+    }
+    finalizedBy("bootRun")
+}
 
 
 jar {

@@ -16,7 +16,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
-public class configuration {
+public class AppConfig {
 
   @Autowired Environment env;
 
