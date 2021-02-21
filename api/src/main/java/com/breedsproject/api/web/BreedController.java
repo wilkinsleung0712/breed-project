@@ -1,10 +1,11 @@
 package com.breedsproject.api.web;
 
-import com.breedsporject.api.web.request.BreedRequest;
-import com.breedsporject.api.web.response.BreedResponse;
-import com.breedsporject.api.web.response.DataResponse;
+import com.breedsproject.api.web.request.BreedRequest;
+import com.breedsproject.api.web.response.BreedResponse;
+import com.breedsproject.api.web.response.DataResponse;
 import com.breedsproject.api.service.BreedService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(
-        value = "/breeds/dog/"
+        value = "/breeds/dog", produces = MediaType.APPLICATION_JSON_VALUE
 )
 public class BreedController {
 
@@ -24,7 +25,7 @@ public class BreedController {
         return new DataResponse(breedService.getDogBreedById(id));
     }
 
-    @GetMapping("/dog")
+    @GetMapping("/search")
     public DataResponse<List<BreedResponse>> searchDogBreedRecord(@RequestParam List<String> dogNames) {
         return new DataResponse(breedService.getDogBreedByNames(dogNames));
     }
@@ -34,9 +35,9 @@ public class BreedController {
         return null;
     }
 
-    @PostMapping("/dog")
-    public DataResponse<BreedResponse> createDogBreedRecord(@RequestBody BreedRequest request) {
-        return null;
+    @PostMapping("/create")
+    public DataResponse<BreedResponse> createDogBreedRecord() {
+        return new DataResponse(breedService.createDogBreedRecord());
     }
 
 

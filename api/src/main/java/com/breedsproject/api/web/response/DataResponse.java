@@ -1,4 +1,4 @@
-package com.breedsporject.api.web.response;
+package com.breedsproject.api.web.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.NonNull;

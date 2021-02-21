@@ -1,4 +1,4 @@
-package com.breedsporject.api.web.request;
+package com.breedsproject.api.web.request;
 
 import lombok.Builder;
 import lombok.ToString;
